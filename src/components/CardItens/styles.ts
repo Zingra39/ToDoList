@@ -1,0 +1,49 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+    card:{
+        width:350,
+        height:60,
+        marginTop:20,
+        backgroundColor:'#262626',
+        borderRadius:5,
+        borderColor:'#808080',
+        borderWidth:0.2,
+        alignItems:'center',
+        justifyContent:'space-between',
+        flexDirection:'row'
+    },
+    descricao:{
+        color:'#F2F2F2',
+        width:'70%',
+        textAlign:'center'
+    },
+    buttonArea:{
+        height:'100%',
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:5,
+        width:'15%'
+    },
+    hoverButton:{
+        backgroundColor:'#333333'
+    },
+    delete:{
+        fontSize: 20,
+        color:'#808080'
+    },
+    hoveredDelte:{
+        color:'#E25858'
+    },
+    checkBoxArea:{
+        height:'100%',
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:5,
+        width:'15%'
+    },
+    uncheckedBox:{
+        color:'#4EA8DE',
+        fontSize:26
+    }
+})
