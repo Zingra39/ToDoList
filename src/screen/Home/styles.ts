@@ -81,6 +81,10 @@ export const styles = StyleSheet.create({
     legend:{
         flexDirection:'row',
         gap:10
+    },
+    focus:{
+        borderColor:'#8284FA',
+        borderWidth:1
     }
 })
 

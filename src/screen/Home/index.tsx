@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList, Alert} from "react-native"
+import { View, Text, TextInput, TouchableOpacity, FlatList, Alert } from "react-native"
 import { styles } from "./styles";
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,25 +9,43 @@ import { CardItens } from "../../components/CardItens";
 
 export function Home(){
 
-    const[atividades, setAtividades] = useState<string[]>(["Interger urna interdum massa libero auctor neque turpis turpis semper."])
-    const[nomeAtividade, setNomeAtividade] = useState('')
+    //CLASSES
+    interface Atividade{
+        id: number;
+        name: string;
+        check: boolean;
+    }
 
+    //USESTATES
+    const[isListAtividades, setListAtividades] = useState<Atividade[]>([])
+    const[nomeAtividade, setNomeAtividade] = useState('')
+    const[isFocus, setIsFocus] = useState(false)
     const[isHovered, setIsHovered] = useState(false)
 
+    //FUNÇÕES 
     function handleAddAtividade(){
-        if(atividades.includes(nomeAtividade)){
+        if(isListAtividades.filter(item => item.name === nomeAtividade).length > 0){
             return Alert.alert("Atividade já cadastrada","Não é possivel cadastrar atividades duplicadas")
         }
 
-        setAtividades(prev =>[...atividades, nomeAtividade])
+        const ultimoID = isListAtividades.length > 0 ? isListAtividades[isListAtividades.length - 1].id! + 1 : 1;
+
+        const novaAtividade: Atividade = {
+            id: ultimoID,
+            name: nomeAtividade,
+            check: false
+        }
+
+        setListAtividades(prev =>[...isListAtividades, novaAtividade])
+
         setNomeAtividade('')
     }
 
-    function handleRemoveAtividade(name: string){
+    function handleRemoveAtividade(item: Atividade){
         Alert.alert('Remover atividade',`Deseja mesmo remover está atividade?`,[
             {
                 text: 'Sim',
-                onPress: () => setAtividades(prevState => prevState.filter(atividade => atividade != name))
+                onPress: () => setListAtividades(prevState => prevState.filter(atividade => atividade.name != item.name))
             },
             {
                 text: 'Não',
@@ -35,6 +53,19 @@ export function Home(){
             }
         ])
     }
+
+    function handleChecked(item: Atividade) {
+        const newListAtividades = isListAtividades.map(atividade => {
+            if (atividade.id === item.id) {
+                return { ...atividade, check: !atividade.check };
+            } else {
+                return atividade;
+            }
+        });
+    
+        setListAtividades(newListAtividades);
+    }
+    
 
     return(
         <View style={styles.container}>
@@ -45,11 +76,13 @@ export function Home(){
             </View>
             <View style={styles.form}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, isFocus && styles.focus]}
                     placeholder="Adicione uma nova tarefa"
                     placeholderTextColor={'#808080'}
                     onChangeText={setNomeAtividade}
                     value={nomeAtividade}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
                 />
                 <TouchableOpacity 
                     style={[styles.buttonArea, isHovered && styles.hoverButtonArea]} 
@@ -64,24 +97,26 @@ export function Home(){
                 <View style={styles.legends}>
                     <View style={styles.legend}>
                         <Text style={styles.criada}>Criadas</Text>
-                        <Text style={styles.contagem}>  1  </Text>
+                        <Text style={styles.contagem}> {isListAtividades.length} </Text>
                     </View>
                     <View style={styles.legend}>
                         <Text style={styles.concluido}>Concluídos</Text>
-                        <Text style={styles.contagem}>  1  </Text>
+                        <Text style={styles.contagem}> {isListAtividades.filter(item => item.check === true).length} </Text>
                     </View>
                 </View>
                 <FlatList
-                    data={atividades}
-                    keyExtractor={item => item}
+                    data={isListAtividades.sort((a, b) => (a.check === b.check ? 0 : a.check ? 1 : -1))}
+                    keyExtractor={item => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={() => (
                         <ListEmpty />
                     )}
                     renderItem={({item}) => (
                         <CardItens 
-                            key={item}
-                            atividade={item}
+                            key={item.id}
+                            atividade={item.name}
+                            check={item.check}
+                            onCheck={() => handleChecked(item)}
                             onRemove={() => handleRemoveAtividade(item)}
                         />
                     )}

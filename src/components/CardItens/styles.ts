@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     descricao:{
         color:'#F2F2F2',
         width:'70%',
-        textAlign:'center'
+        textAlign:'left'
     },
     buttonArea:{
         height:'100%',
@@ -45,5 +45,12 @@ export const styles = StyleSheet.create({
     uncheckedBox:{
         color:'#4EA8DE',
         fontSize:26
+    },
+    checked:{
+        color:'#5E60CE'
+    },
+    atividadeConcluida:{
+        textDecorationLine:'line-through',
+        color:'#808080'
     }
 })
